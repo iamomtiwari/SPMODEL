@@ -69,6 +69,12 @@ def predict():
             else:
                 # Ask user for the name of the plant/disease
                 return render_template('index.html', unknown=True, img_path=img_path)
+    @app.route('/submit_unknown', methods=['POST'])
+def submit_unknown():
+    plant_name = request.form['plant_name']
+    img_path = request.form['img_path']
+    # You can save or process the unknown plant name as needed
+    return render_template('index.html', plant_name=plant_name, img_path=img_path)
 
 if __name__ == '__main__':
     app.run(debug=True)
