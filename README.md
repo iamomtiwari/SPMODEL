@@ -1,3 +1,3 @@
-# Crop Diseasease Detection and Classification
+# Crop Disease Detection and Classification
 
 Implementing the ML model on a website
