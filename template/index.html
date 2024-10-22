@@ -17,5 +17,15 @@
         <p>Solution: {{ solution }}</p>
     {% endif %}
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% if unknown %}
+    <h2>Unknown Class Detected</h2>
+    <p>Please enter the name of the plant or disease:</p>
+    <form action="/submit_unknown" method="post">
+        <input type="text" name="plant_name" required>
+        <input type="hidden" name="img_path" value="{{ img_path }}">
+        <button type="submit">Submit</button>
+    </form>
+{% endif %}
+
 </body>
 </html>
