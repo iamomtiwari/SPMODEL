@@ -30,16 +30,21 @@ class_labels = [
 
 # Solutions dictionary
 solutions = {
-    "Corn___Healthy": "Continue monitoring. Ensure proper water and nutrient supply.",
-    "Corn___Common_Rust": "Monitor the spread. Apply fungicides if necessary.",
-    "Corn___Gray_Leaf_Spot": "Rotate crops and apply appropriate fungicides.",
-    "Corn___Northern_Leaf_Blight": "Remove infected leaves and apply fungicides.",
-    # Add other classes and their solutions here...
+    "Corn___Common_Rust": "Apply fungicides as soon as symptoms are noticed. Practice crop rotation and remove infected plants.",
+    "Corn___Gray_Leaf_Spot": "Rotate crops to non-host plants, apply resistant varieties, and use fungicides as needed.",
+    "Corn___Healthy": "Continue good agricultural practices: ensure proper irrigation, nutrient supply, and monitor for pests.",
+    "Corn___Northern_Leaf_Blight": "Remove and destroy infected plant debris, apply fungicides, and rotate crops.",
+    "Rice___Brown_Spot": "Use resistant varieties, improve field drainage, and apply fungicides if necessary.",
+    "Rice___Healthy": "Maintain proper irrigation, fertilization, and pest control measures.",
+    "Rice___Leaf_Blast": "Use resistant varieties, apply fungicides during high-risk periods, and practice good field management.",
+    "Rice___Neck_Blast": "Plant resistant varieties, improve nutrient management, and apply fungicides if symptoms appear.",
+    "Wheat___Brown_Rust": "Apply fungicides and practice crop rotation with non-host crops.",
+    "Wheat___Healthy": "Continue with good management practices, including proper fertilization and weed control.",
+    "Wheat___Yellow_Rust": "Use resistant varieties, apply fungicides, and rotate crops.",
+    "Sugarcane__Red_Rot": "Plant resistant varieties and ensure good drainage.",
+    "Sugarcane__Healthy": "Maintain healthy soil conditions and proper irrigation.",
+    "Sugarcane__Bacterial Blight": "Use disease-free planting material, practice crop rotation, and destroy infected plants."
 }
-
-@app.route('/')
-def index():
-    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -54,10 +59,16 @@ def predict():
             img_array = np.expand_dims(img_array, axis=0)
 
             predictions = model.predict(img_array)
-            predicted_class = class_labels[np.argmax(predictions)]
-            solution = solutions.get(predicted_class, "No solution available.")
-
-            return render_template('index.html', predicted_class=predicted_class, solution=solution)
+            predicted_class_index = np.argmax(predictions)
+            predicted_class = class_labels[predicted_class_index]
+            
+            # Check if the predicted class is among the known classes
+            if predicted_class in solutions:
+                solution = solutions[predicted_class]
+                return render_template('index.html', predicted_class=predicted_class, solution=solution)
+            else:
+                # Ask user for the name of the plant/disease
+                return render_template('index.html', unknown=True, img_path=img_path)
 
 if __name__ == '__main__':
     app.run(debug=True)
